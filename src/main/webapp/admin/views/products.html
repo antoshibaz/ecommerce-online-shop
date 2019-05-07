@@ -1,0 +1,134 @@
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Управление товарами</h1>
+</div>
+
+<div class="card shadow mb-12">
+    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+        <h6 class="m-0 font-weight-bold text-primary">Список товаров</h6>
+        <div class="dropdown no-arrow">
+            <button ng-disabled="selCat['goodsCategory']['id'] === -1 || selType['id'] === -1" id="addProdBtn"
+                    data-toggle="modal" data-target="#productModal" ng-click="addingMode()"
+                    class="btn btn-primary btn-icon-split">
+                <span class="icon text-white-50">
+                      <i class="fas fa-plus"></i>
+                </span>
+                <span class="text">Добавить существующий товар</span>
+            </button>
+            <button id="crProdBtn" data-toggle="modal" data-target="#productModal" ng-click="creatingMode()"
+                    class="btn btn-primary btn-icon-split">
+                <span class="icon text-white-50">
+                      <i class="fab fa-creative-commons-share"></i>
+                </span>
+                <span class="text">Создать новый товар</span>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="card-title row">
+            <div class="col-6">
+                <label class="mr-sm-2" for="inlineFormCustomSelect">Категория</label>
+                <select ng-change="updateProductsForCategory()" ng-init="selCat" ng-model="selCat"
+                        ng-options="ct['goodsCategory']['naming'] for ct in categoriesWithTypes track by ct['goodsCategory']['id'].toString()"
+                        class="custom-select mr-sm-2" id="inlineFormCustomSelect">
+                </select>
+            </div>
+            <div class="col-6">
+                <label class="mr-sm-2" for="inlineFormCustomSelect2">Тип</label>
+                <select ng-change="updateProductsForType()" ng-init="selType" ng-model="selType"
+                        ng-options="t['naming'] for t in selCat['goodsTypes'] track by t['id'].toString()"
+                        class="custom-select mr-sm-2" id="inlineFormCustomSelect2">
+                </select>
+            </div>
+        </div>
+        <div class="card-text">
+            <ul class="list-group list-group-flush">
+                <li ng-repeat="p in goods" class="list-group-item">
+                    <div class="row">
+                        <div class="col-9"><a href="#!/product/{{p['id']}}">{{p['naming']}}</a></div>
+                        <div class="col-3 text-right">
+                            <button ng-disabled="selCat['goodsCategory']['id'] === -1 || selType['id'] === -1"
+                                    ng-click="detachProduct(p)" class="btn btn-warning btn-circle btn-sm">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <button ng-click="removeProduct(p)" class="btn btn-danger btn-circle btn-sm">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="productModal" tabindex="-1" role="dialog" aria-labelledby="productModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 ng-if="isAddingMode" class="modal-title" id="productModalLabel">Добавление товара к
+                    категории-типу</h5>
+                <h5 ng-if="!isAddingMode" class="modal-title" id="productModalLabel">Создание нового товара</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div ng-show="!isAddingMode" class="modal-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <input type="file" nv-file-select="" uploader="uploader" />
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col form-group">
+                        <label>Наименование</label>
+                        <input ng-model="selProduct.naming" type="text" class="form-control" placeholder="">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col form-group">
+                        <label>Краткое описание</label>
+                        <input ng-model="selProduct.descriptionPreview" type="text" class="form-control" placeholder="">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group btn-block">
+                        <label>
+                            Полное описание
+                            <textarea ng-model="selProduct.descriptionExtended" style="width:100%; resize: none;"
+                                      class="form-control" cols="50" rows="10" name="text"></textarea>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-6 form-group">
+                        <label>Цена</label>
+                        <input ng-model="selProduct.price" type="text" class="form-control" placeholder="">
+                    </div>
+                    <div class="col-6 form-group">
+                        <label>Количество</label>
+                        <input ng-model="selProduct.count" type="text" class="form-control" placeholder="">
+                    </div>
+                </div>
+            </div>
+            <div ng-show="isAddingMode" class="modal-body">
+                <div class="col form-group">
+                    <label>Наименование</label>
+                    <select ng-init="selProduct" ng-model="selProduct" size="1"
+                            ng-options="p['naming'] for p in productsForAttaching track by p['id'].toString()"
+                            class="custom-select mr-sm-2" id="inlineFormCustomSelect4">
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button ng-if="isAddingMode" ng-click="addProduct(selProduct)" data-dismiss="modal"
+                        class="btn btn-primary">Добавить
+                </button>
+                <button ng-if="!isAddingMode" ng-click="createProduct(selProduct)" data-dismiss="modal"
+                        class="btn btn-primary">
+                    Создать
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

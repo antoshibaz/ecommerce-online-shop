@@ -1,0 +1,83 @@
+<div class="container-fluid">
+
+    <h1 class="h3 mb-2 text-gray-800">Управление заказами</h1>
+    <br>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Заказы</h6>
+            <div class="dropdown no-arrow">
+                <h6>Статус:</h6>
+                <div class="form-group">
+                    <select class="custom-select mr-sm-2" ng-change="updateOrders()" id="ordersForStatus"
+                            ng-model="thisStatus"
+                            ng-init="thisStatus" ng-options="s.val for s in orderStatuses track by s.id">
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Клиент</th>
+                        <th>Тип доставки</th>
+                        <th>Дата</th>
+                        <th>Cтоимость</th>
+                        <th>Статус</th>
+                        <th>Управление</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="order in orders">
+                        <td>{{order.id}}</td>
+                        <td>{{order.firstName}} {{order.lastName}}</td>
+                        <td>{{getDeliveryTypeLabel(order.deliveryType)}}</td>
+                        <td>{{order.datetime}}</td>
+                        <td>{{order.totalPrice}} ₽</td>
+                        <td>{{getOrderStatusLabel(order.status)}}</td>
+                        <td class="text-center">
+                            <button ng-click="setSelOrder(order)" data-toggle="modal" data-target="#statusModal"
+                                    class="btn btn-info btn-circle">
+                                <i class="fas fa-exchange-alt"></i>
+                            </button>
+                            <a href="#!/order/{{order.id}}" class="btn btn-info btn-circle">
+                                <i class="fas fa-info-circle"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="statusModal" tabindex="-1" role="dialog" aria-labelledby="statusModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="productModalLabel">Сменить статус</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="col form-group">
+                        <select class="custom-select mr-sm-2" ng-model="selUpdStatus" ng-init="selUpdStatus"
+                                ng-options="s.val for s in orderStatuses track by s.id"></select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button data-dismiss="modal" ng-click="changeStatus()"
+                        class="btn btn-primary">Сохранить
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

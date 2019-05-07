@@ -1,0 +1,104 @@
+<div ng-show="!orderOk" class="card">
+    <header class="card-header">
+        <h4 class="card-title mt-2">Оформление заказа</h4>
+    </header>
+    <article class="card-body">
+        <form name="orderForm" novalidate>
+            <div class="form-row">
+                <div class="col form-group">
+                    <label for="firstName">Имя</label>
+                    <input required id="firstName" name="firstName" ng-model="order.firstName" type="text"
+                           class="form-control" placeholder=""
+                           minlength="2" maxlength="20"
+                           ng-class="(orderForm.firstName.$invalid && orderForm.firstName.$touched ? 'is-invalid' : (orderForm.firstName.$valid && orderForm.firstName.$touched) ? 'is-valid' : '')">
+                    <small ng-show="orderForm.firstName.$invalid && orderForm.firstName.$touched"
+                           class="form-text text-danger">Введите имя
+                    </small>
+                </div>
+                <div class="col form-group">
+                    <label for="lastName">Фамилия</label>
+                    <input required id="lastName" name="lastName" ng-model="order.lastName" type="text"
+                           class="form-control" placeholder=""
+                           minlength="2" maxlength="30"
+                           ng-class="(orderForm.lastName.$invalid && orderForm.lastName.$touched ? 'is-invalid' : (orderForm.lastName.$valid && orderForm.lastName.$touched) ? 'is-valid' : '')">
+                    <small ng-show="orderForm.lastName.$invalid && orderForm.lastName.$touched"
+                           class="form-text text-danger">Введите фамилию
+                    </small>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col form-group">
+                    <label for="email">Email адрес</label>
+                    <input required id="email" name="email" ng-model="order.email" type="email" class="form-control"
+                           placeholder="" minlength="4"
+                           ng-class="(orderForm.email.$invalid && orderForm.email.$touched ? 'is-invalid' : (orderForm.email.$valid && orderForm.email.$touched) ? 'is-valid' : '')">
+                    <small ng-show="orderForm.email.$invalid && orderForm.email.$touched" class="form-text text-danger">
+                        Введите корректный адрес электронной почты
+                    </small>
+                </div>
+                <div class="col form-group">
+                    <label for="phoneNumber">Номер телефона</label>
+                    <input required id="phoneNumber" name="phoneNumber" ng-model="order.phoneNumber" type="tel"
+                           class="form-control" placeholder=""
+                           minlength="11" maxlength="20"
+                           ng-class="(orderForm.phoneNumber.$invalid && orderForm.phoneNumber.$touched ? 'is-invalid' : (orderForm.phoneNumber.$valid && orderForm.phoneNumber.$touched) ? 'is-valid' : '')">
+                    <small ng-show="orderForm.phoneNumber.$invalid && orderForm.phoneNumber.$touched"
+                           class="form-text text-danger">Введите номер телефона
+                    </small>
+                </div>
+            </div>
+            <div class="form-group">
+                <label ng-repeat="dt in deliveryTypes" class="form-check form-check-inline">
+                    <input ng-model="selDeliveryType.id"
+                           class="form-check-input" type="radio" name="gender" value="{{dt['id']}}">
+                    <span class="form-check-label">{{dt['val']}}</span>
+                </label>
+            </div>
+            <div class="form-row">
+                <div class="col-4 form-group">
+                    <label for="addrCity">Город</label>
+                    <input required id="addrCity" name="addrCity" ng-model="addrCity" type="text" class="form-control"
+                           placeholder=""
+                           minlength="2" maxlength="30"
+                           ng-class="(orderForm.addrCity.$invalid && orderForm.addrCity.$touched ? 'is-invalid' : (orderForm.addrCity.$valid && orderForm.addrCity.$touched) ? 'is-valid' : '')">
+                    <small ng-show="orderForm.addrCity.$invalid && orderForm.addrCity.$touched"
+                           class="form-text text-danger">Введите город доставки
+                    </small>
+                </div>
+                <div class="col-8 form-group">
+                    <label for="addr">Адрес доставки</label>
+                    <input required id="addr" name="addr" ng-model="addr" type="text" class="form-control"
+                           placeholder=""
+                           minlength="5"
+                           ng-class="(orderForm.addr.$invalid && orderForm.addr.$touched ? 'is-invalid' : (orderForm.addr.$valid && orderForm.addr.$touched) ? 'is-valid' : '')">
+                    <small ng-show="orderForm.addr.$invalid && orderForm.addr.$touched" class="form-text text-danger">
+                        Введите адрес доставки
+                    </small>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>
+                    Ваш комментарий
+                    <textarea ng-model="comment" ng-model="order.comment" style="resize: none;"
+                              class="form-control" rows="2" cols="100" name="text"></textarea>
+                </label>
+            </div>
+            <div class="form-row">
+                <div class="col-8 form-group">
+                    <h2>Общая стоимость заказа: <span class="price text-success">{{getCart()['totalPrice']}} ₽</span>
+                    </h2>
+                </div>
+                <div class="col-4 form-group">
+                    <button type="submit" class="btn btn-outline-primary btn-lg btn-block" ng-click="sendOrder()">
+                        Отправить
+                    </button>
+                </div>
+            </div>
+        </form>
+    </article>
+</div>
+<div ng-show="orderOk" class="card">
+    <div class="card-body-lg text-center">
+        <h3>Ваш заказ успешно оформлен и в ближайшее время будет обработан)</h3>
+    </div>
+</div>

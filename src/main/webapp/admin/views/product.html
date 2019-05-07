@@ -1,0 +1,132 @@
+<div class="container-fluid">
+
+    <h1 class="h3 mb-2 text-gray-800">Товар #{{product['id']}}</h1>
+    <br>
+
+    <article class="card card-product shadow">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Основная информация</h6>
+            <div class="dropdown no-arrow">
+                <button id="updProdBtn" data-toggle="modal" data-target="#productModal"
+                        class="btn btn-warning btn-icon-split">
+                <span class="icon text-white-50">
+                      <i class="fas fa-pen"></i>
+                </span>
+                    <span class="text">Редактировать товар</span>
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <aside class="col-sm-3">
+                    <div class="img-wrap img-big-wrap"><img ng-src="../shop-api/goods/{{product['id']}}/photo"></div>
+                </aside>
+                <article class="col-sm-9">
+                    <h2 class="title">{{product['naming']}}</h2>
+                    <br>
+                    <div class="row">
+                        <div class="col-8">
+                            <dl>
+                                <dt>Краткое описание</dt>
+                                <dd>{{product['descriptionPreview']}}</dd>
+                            </dl>
+                            <dl>
+                                <dt>Полное описание</dt>
+                                <dd>{{product['descriptionExtended']}}</dd>
+                            </dl>
+                        </div>
+                        <div class="col-4">
+                            <dl>
+                                <dt>Количество</dt>
+                                <dd>{{product['count']}}</dd>
+                            </dl>
+                            <dl>
+                                <dt>Цена</dt>
+                                <dd>{{product['price']}} ₽</dd>
+                            </dl>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </article>
+
+    <br>
+    <h1 class="h3 mb-2 text-gray-800">Комментарии</h1>
+    <br>
+
+    <div ng-repeat="c in productComments" class="card text-dark mb-3">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h5>{{c['username']}}</h5>
+            <span
+                class="text-muted">{{c['datetime']}}
+            </span>
+            <div class="dropdown no-arrow">
+                <button ng-click="deleteComment(c)" id="delCommBtn" class="btn btn-danger btn-circle">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <p class="card-text">{{c['comment']}}</p>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="productModal" tabindex="-1" role="dialog" aria-labelledby="productModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="productModalLabel">Редактирование товара</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <input type="file" nv-file-select="" uploader="uploader" />
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col form-group">
+                        <label>Наименование</label>
+                        <input ng-model="product.naming" type="text" class="form-control" placeholder="">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col form-group">
+                        <label>Краткое описание</label>
+                        <input ng-model="product.descriptionPreview" type="text" class="form-control" placeholder="">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group btn-block">
+                        <label>
+                            Полное описание
+                            <textarea ng-model="product.descriptionExtended" style="width:100%; resize: none;"
+                                      class="form-control" cols="50" rows="10" name="text"></textarea>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-6 form-group">
+                        <label>Цена</label>
+                        <input ng-model="product.price" type="text" class="form-control" placeholder="">
+                    </div>
+                    <div class="col-6 form-group">
+                        <label>Количество</label>
+                        <input ng-model="product.count" type="text" class="form-control" placeholder="">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button ng-click="updateProduct(product)" data-dismiss="modal"
+                        class="btn btn-primary">
+                    Сохранить
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

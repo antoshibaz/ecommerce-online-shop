@@ -1,0 +1,177 @@
+<div class="container-fluid">
+
+    <h1 class="h3 mb-2 text-gray-800">Заказ #{{order['id']}}</h1>
+    <br>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Основная информация</h6>
+            <div class="dropdown no-arrow">
+                <button data-toggle="modal" data-target="#orderModal"
+                        class="btn btn-warning btn-icon-split">
+                <span class="icon text-white-50">
+                      <i class="fas fa-pen"></i>
+                </span>
+                    <span class="text">Редактировать</span>
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-6">
+                    <div>
+                        <dl>
+                            <dt>Имя:</dt>
+                            <dd>{{order['firstName']}}</dd>
+                        </dl>
+                        <dl>
+                            <dt>Фамилия:</dt>
+                            <dd>{{order['lastName']}}</dd>
+                        </dl>
+                        <dl>
+                            <dt>Email:</dt>
+                            <dd>{{order['email']}}</dd>
+                        </dl>
+                        <dl>
+                            <dt>Телефон:</dt>
+                            <dd>{{order['phoneNumber']}}</dd>
+                        </dl>
+                        <dl>
+                            <dt>Комментарий клиента:</dt>
+                            <dd>{{order['comment']}}</dd>
+                        </dl>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div>
+                        <dl>
+                            <dt>Тип доставки:</dt>
+                            <dd>{{getDeliveryTypeLabel(order['deliveryType'])}}</dd>
+                        </dl>
+                        <dl>
+                            <dt>Адрес доставки:</dt>
+                            <dd>{{order['deliveryAddress']}}</dd>
+                        </dl>
+                        <dl>
+                            <dt>Дата:</dt>
+                            <dd>{{order['datetime']}}</dd>
+                        </dl>
+                        <dl>
+                            <dt>Стоимость заказа:</dt>
+                            <dd>{{order['totalPrice']}} ₽</dd>
+                        </dl>
+                        <dl>
+                            <dt>Статус заказа:</dt>
+                            <dd>{{getOrderStatusLabel(order['status'])}}</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Состав заказа</h6>
+        </div>
+        <div class="card-body">
+            <div class="card-title">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-1"><b>#</b></div>
+                            <div class="col-8"><b>Наименование товара</b></div>
+                            <div class="col-3 text-right"><b>Количество</b></div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <hr class="sidebar-divider my-0">
+            <div class="card-text">
+                <ul class="list-group list-group-flush">
+                    <li ng-repeat="p in order['goodsList']" class="list-group-item">
+                        <div class="row">
+                            <div class="col-1">{{$index+1}}</div>
+                            <div ng-if="p['naming']===null" class="col-8">Товар не существует (удален)</div>
+                            <div ng-if="p['naming']!==null" class="col-8"><a href="#!/product/{{p['id']}}">{{p['naming']}}</a></div>
+                            <div class="col-3 text-right">{{p['count']}}</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="orderModal" tabindex="-1" role="dialog" aria-labelledby="orderModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="productModalLabel">Редактирование заказа</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="col form-group">
+                        <label>Имя</label>
+                        <input ng-model="order.firstName" type="text" class="form-control" placeholder="">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col form-group">
+                        <label>Фамилия</label>
+                        <input ng-model="order.lastName" type="text" class="form-control" placeholder="">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col form-group">
+                        <label>Email</label>
+                        <input ng-model="order.email" type="text" class="form-control" placeholder="">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col form-group">
+                        <label>Телефон</label>
+                        <input ng-model="order.phoneNumber" type="text" class="form-control" placeholder="">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group btn-block">
+                        <label>
+                            Комментарий клиента
+                            <textarea ng-model="order.comment" style="width:100%; resize: none;"
+                                      class="form-control" cols="50" rows="5" name="text"></textarea>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col form-group">
+                        <label>Тип доставки</label>
+                        <select class="custom-select mr-sm-2" ng-model="selUpdDeliveryType" ng-init="selUpdDeliveryType"
+                                ng-options="t.val for t in deliveryTypes track by t.id"></select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col form-group">
+                        <label>Адрес доставки</label>
+                        <input ng-model="order.deliveryAddress" type="text" class="form-control" placeholder="">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col form-group">
+                        <label>Стоимость заказа</label>
+                        <input ng-model="order.totalPrice" type="text" class="form-control" placeholder="">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button ng-click="updateOrderInfo(order)" data-dismiss="modal"
+                        class="btn btn-primary">Сохранить
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

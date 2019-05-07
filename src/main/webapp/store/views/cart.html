@@ -1,0 +1,68 @@
+<div class="row">
+    <main class="col-sm-9">
+        <div class="card">
+            <table ng-if="cart.countPositions!==0" class="table table-hover shopping-cart-wrap">
+                <thead class="text-muted">
+                <tr>
+                    <th scope="col">Товар</th>
+                    <th scope="col" width="120">Количество</th>
+                    <th scope="col" width="120">Цена</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="p in cart.productsList">
+                    <td>
+                        <figure class="media">
+                            <div class="img-wrap"><img ng-src="shop-api/goods/{{p['id']}}/photo"
+                                                       class="img-thumbnail img-sm">
+                            </div>
+                            <figcaption class="media-body">
+                                <a href="#!/product" ng-click="setSelProductById(p['id'])"><h5
+                                        class="title text-truncate">
+                                    {{p['naming']}}</h5></a>
+                            </figcaption>
+                        </figure>
+                    </td>
+                    <td>
+                        <div class="input-group">
+                            <input class="form-control" ng-disabled="true" ng-model="p['count']">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="price-wrap">
+                            <var class="price">{{p['price']*p['count']}} ₽</var>
+                            <small class="text-muted">{{p['price']}} ₽ / 1 шт.</small>
+                        </div>
+                    </td>
+                    <td class="text-right">
+                        <button ng-click="removeFromCart(p['id'])" class="btn btn-outline-danger"> × Удалить</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="card-body-lg" ng-if="cart.countPositions===0">
+                <div class="card-text text-center">
+                    <h3 class="text-muted">Корзина пуста</h3>
+                </div>
+            </div>
+        </div>
+    </main>
+    <aside class="col-sm-3">
+        <div>
+            <dl class="dlist-align h5">
+                <dt>Общая цена:</dt>
+                <dd class="text-right"><strong>{{cart['totalPrice']}} ₽</strong></dd>
+            </dl>
+        </div>
+        <br>
+        <div class="border-bottom"></div>
+        <br>
+        <div class="row">
+            <div class="col-12">
+                <button ng-disabled="cart.countPositions===0"
+                        ng-click="forwardToOrder()"
+                        style="width: 100%" class="btn btn-outline-success btn-lg">Заказать</button>
+            </div>
+        </div>
+    </aside>
+</div>

@@ -1,0 +1,110 @@
+<div class="card">
+    <div class="row no-gutters">
+        <aside class="col-sm-5 border-right">
+            <article class="gallery-wrap">
+                <div class="img-big-wrap">
+                    <div><a ng-href="shop-api/goods/{{product['id']}}/photo"
+                            data-fancybox="">
+                        <img ng-src="shop-api/goods/{{product['id']}}/photo"></a>
+                    </div>
+                </div>
+            </article>
+        </aside>
+        <aside class="col-sm-7">
+            <article class="p-5">
+                <h3 class="title mb-3">{{product['naming']}}</h3>
+                <div class="mb-3">
+                    <var class="price h3 text-warning">
+                        <span class="num">{{product['price']}} ₽</span>
+                    </var>
+                    <span>/1 шт.</span>
+                </div>
+                <dl>
+                    <dd><p>{{product['descriptionPreview']}}</p></dd>
+                </dl>
+                <dl class="row">
+                    <dt class="col-sm-3">Осталось на складе</dt>
+                    <dd class="col-sm-9">{{product['count']}}</dd>
+                </dl>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-5">
+                        <dl class="dlist-inline">
+                            <dt>Количество:</dt>
+                            <dd>
+                                <div class="form-row">
+                                    <div class="col-auto input-group">
+                                        <div class="input-group-prepend">
+                                            <button ng-click="mQuantity()" class="btn btn-primary"><i
+                                                    class="fa fa-minus"></i></button>
+                                        </div>
+                                        <input class="form-control disabled" ng-disabled="true" ng-model="selQuantity"
+                                               type="number">
+                                        <div class="input-group-append">
+                                            <button ng-click="pQuantity()" class="btn btn-primary"><i
+                                                    class="fa fa-plus"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+                <hr>
+                <button class="btn btn-outline-primary btn-lg"
+                        ng-click="putToCart()">
+                    <i class="fas fa-shopping-cart"></i> Добавить в корзину
+                </button>
+            </article>
+        </aside>
+    </div>
+</div>
+
+<article class="card mt-3">
+    <div class="card-body">
+        <h3>Описание</h3>
+        <p>{{product['descriptionExtended']}}</p>
+    </div>
+</article>
+<br>
+
+<article class="card">
+    <div class="card-body">
+        <div class="card-title"><h4>Оставьте Ваш отзыв</h4></div>
+        <div class="form-row">
+            <div class="col-6 form-group">
+                <label>Имя</label>
+                <input ng-model="userComment.username" type="text" class="form-control" placeholder="">
+            </div>
+            <div class="col-6 form-group">
+                <label>Email</label>
+                <input ng-model="userComment.userEmail" type="text" class="form-control" placeholder="">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label>Отзыв</label>
+                <textarea ng-model="userComment.comment" style="width:100%; resize: none;"
+                          class="form-control" cols="150" rows="5" name="text"></textarea>
+
+            </div>
+        </div>
+        <button class="btn btn-outline-primary btn-lg"
+                ng-click="sendUserComment()">
+            Отправить
+        </button>
+    </div>
+</article>
+<br>
+
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Отзывы пользователей</h1>
+</div>
+
+<div ng-repeat="c in prodComments" class="card text-dark bg-light mb-3">
+    <div class="card-header"><h5>{{c['username']}}</h5><span
+            class="text-muted">{{c['datetime']}}</span></div>
+    <div class="card-body">
+        <p class="card-text">{{c['comment']}}</p>
+    </div>
+</div>

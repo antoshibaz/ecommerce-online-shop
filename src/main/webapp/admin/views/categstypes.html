@@ -1,0 +1,153 @@
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Управление категориями и типами товаров</h1>
+</div>
+
+<div class="row">
+    <div class="col-xl-6 col-lg-6">
+        <div class="card shadow mb-12">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Категории</h6>
+                <div class="dropdown no-arrow">
+                    <button ng-click="setCatUpdatingMode()" role="button" aria-haspopup="true" aria-expanded="false"
+                            data-toggle="modal" data-target="#addCatModal" class="btn btn-warning btn-circle btn-sm">
+                        <i class="fas fa-pen"></i>
+                    </button>
+                    <button ng-click="setCatAddingMode()" role="button" aria-haspopup="true" aria-expanded="false"
+                            data-toggle="modal" data-target="#addCatModal" class="btn btn-primary btn-circle btn-sm">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                    <button ng-click="removeCategory()" role="button" class="btn btn-danger btn-circle btn-sm">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <select ng-change="onOptionsChanged(selCat)" ng-init="selCat" ng-model="selCat" size="34"
+                        ng-options="ct['goodsCategory']['naming'] for ct in categoriesWithTypes track by ct['goodsCategory']['id'].toString()"
+                        class="custom-select mr-sm-2" id="inlineFormCustomSelect">
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-6 col-lg-6">
+        <div class="card shadow mb-12">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Типы</h6>
+                <div class="dropdown no-arrow">
+                    <button ng-click="setTypeUpdatingMode()" role="button" aria-haspopup="true" aria-expanded="false"
+                            data-toggle="modal" data-target="#addTypeModal" class="btn btn-warning btn-circle btn-sm">
+                        <i class="fas fa-pen"></i>
+                    </button>
+                    <button ng-click="setTypeAddingMode()" role="button" aria-haspopup="true" aria-expanded="false"
+                            data-toggle="modal" data-target="#addTypeModal" class="btn btn-primary btn-circle btn-sm">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                    <button ng-click="removeType()" role="button" class="btn btn-danger btn-circle btn-sm">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-6 text-center">
+                        <div class="custom-control custom-radio">
+                            <input ng-change="updateTypeMode()" ng-model="typeMode.id" value="1" type="radio"
+                                   id="customRadio1" name="customRadio1"
+                                   class="custom-control-input">
+                            <label class="custom-control-label" for="customRadio1">Только для связанных
+                                категорий</label>
+                        </div>
+                    </div>
+                    <div class="col-6 text-center">
+                        <div class="custom-control custom-radio">
+                            <input ng-change="updateTypeMode()" ng-model="typeMode.id" value="2" type="radio"
+                                   id="customRadio2" name="customRadio2"
+                                   class="custom-control-input">
+                            <label class="custom-control-label" for="customRadio2">Все существующие</label>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div>
+                    <select ng-show="typeMode['id'] === '1'" ng-init="selType" ng-model="selType" size="30"
+                            ng-options="t1['naming'] for t1 in selCat['goodsTypes'] track by t1['id'].toString()"
+                            class="custom-select mr-sm-2" id="inlineFormCustomSelect2">
+                    </select>
+                    <select ng-show="typeMode['id'] === '2'" ng-init="selAllType" ng-model="selAllType" size="30"
+                            ng-options="t2['naming'] for t2 in allTypes track by t2['id'].toString()"
+                            class="custom-select mr-sm-2" id="inlineFormCustomSelect3">
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addCatModal" tabindex="-1" role="dialog" aria-labelledby="addCatModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 ng-if="catAddingMode" class="modal-title" id="addCatModalLabel">Новая категория</h5>
+                <h5 ng-if="!catAddingMode" class="modal-title" id="addCatModalLabel">Редактирование категории</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="col form-group">
+                        <label>Наименование</label>
+                        <input ng-model="cat.naming" type="text" class="form-control" placeholder="">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button ng-if="catAddingMode" ng-click="addNewCategory(cat)" data-dismiss="modal"
+                            class="btn btn-primary">Добавить
+                    </button>
+                    <button ng-if="!catAddingMode" ng-click="updCategory(cat)" data-dismiss="modal"
+                            class="btn btn-primary">Сохранить
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="addTypeModal" tabindex="-1" role="dialog" aria-labelledby="addTypeModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 ng-if="typeAddingMode && typeMode.id === '2'" class="modal-title" id="addTypeModalLabel">Новый тип</h5>
+                <h5 ng-if="!typeAddingMode" class="modal-title" id="addTypeModalLabel">Редактирование типа</h5>
+                <h5 ng-if="typeAddingMode && typeMode.id === '1'" class="modal-title" id="addTypeModalLabel">Привязка типа к выбранной категории</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row">
+                    <div ng-hide="typeAddingMode && typeMode.id === '1'" class="col form-group">
+                        <label>Наименование</label>
+                        <input ng-model="type.naming" type="text" class="form-control" placeholder="">
+                    </div>
+                    <div ng-show="typeAddingMode && typeMode.id === '1'" class="col form-group">
+                        <label>Наименование</label>
+                        <select ng-init="selTypeForMap" ng-model="selTypeForMap" size="1"
+                                ng-options="t3['naming'] for t3 in allTypes track by t3['id'].toString()"
+                                class="custom-select mr-sm-2" id="inlineFormCustomSelect4">
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button ng-if="typeAddingMode" ng-click="addNewType(type)" data-dismiss="modal"
+                            class="btn btn-primary">Добавить
+                    </button>
+                    <button ng-if="!typeAddingMode" ng-click="updType(type)" data-dismiss="modal"
+                            class="btn btn-primary">Сохранить
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

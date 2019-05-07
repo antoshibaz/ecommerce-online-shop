@@ -1,0 +1,237 @@
+﻿<!DOCTYPE HTML>
+<html lang="ru" ng-app="kotomka" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Kotomka Shop</title>
+    <link rel="shortcut icon" type="image/x-icon" href="resources/images/favicon.ico">
+
+    <!-- AngularJs -->
+    <script src="resources/js/angular.min.js"></script>
+    <script src="resources/js/angular-route.min.js"></script>
+    <script src="resources/js/angular-local-storage.min.js"></script>
+    <script src="store/js/app.js"></script>
+    <script src="store/js/routes.js"></script>
+    <script src="store/js/controllers/welcome.js"></script>
+    <script src="store/js/controllers/products.js"></script>
+    <script src="store/js/controllers/product-detail.js"></script>
+    <script src="store/js/controllers/cart.js"></script>
+    <script src="store/js/controllers/order.js"></script>
+    <script src="store/js/controllers/indexForms.js"></script>
+
+    <!-- jQuery -->
+    <script src="resources/js/jquery-3.4.0.min.js" type="text/javascript"></script>
+
+    <!-- Bootstrap4 -->
+    <script src="resources/js/bootstrap.bundle.min.js" type="text/javascript"></script>
+    <link href="resources/css/bootstrap.css" rel="stylesheet" type="text/css"/>
+
+    <!-- Fontawesome 5 -->
+    <link rel="stylesheet" href="http://use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <!-- Roboto fonts -->
+    <!--<link href="https://fonts.googleapis.com/css?family=Open+Sans|Roboto|Ubuntu:300,300i,400,400i,700,700i&amp;subset=cyrillic,cyrillic-ext" rel="stylesheet">-->
+
+    <!-- plugin: fancybox  -->
+    <script src="resources/plugins/fancybox/fancybox.min.js" type="text/javascript"></script>
+    <link href="resources/plugins/fancybox/fancybox.min.css" type="text/css" rel="stylesheet">
+
+    <!-- Custom styles -->
+    <link href="resources/css/ui.css" rel="stylesheet" type="text/css"/>
+    <link href="resources/css/responsive.css" rel="stylesheet" media="only screen and (max-width: 1200px)"/>
+    <!-- Custom sсripts -->
+    <script src="resources/js/script.js" type="text/javascript"></script>
+
+    <style>
+        html,
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding-top: 35px;
+        }
+
+        #main-wrapper {
+            flex: 1;
+        }
+
+        .dropdown > .dropdown-toggle:active {
+            /*Without this, clicking will make it sticky*/
+            pointer-events: none;
+        }
+
+        .dropdown:hover > .dropdown-menu {
+            display: block;
+        }
+
+        .dropdown:hover > a,
+        .dropdown:hover > a:hover,
+        .dropdown:hover > a:focus {
+            color: #fff;
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .dropdown-item {
+            padding: 20px
+        }
+
+        .top {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 99999;
+        }
+    </style>
+</head>
+<body>
+<div class="bg" id="main-wrapper">
+    <header class="section-header top bg-white">
+        <section class="header-main shadow-sm">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-3">
+                        <div class="brand-wrap">
+                            <img class="logo" src="resources/images/brand.png">
+                            <h2 class="logo-text"><a href="#!/"> Kotomka Shop</a></h2>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-2 dropdown">
+                        <button class="btn btn-secondary btn-lg btn-block dropdown-toggle" data-toggle="dropdown">
+                            Каталог <b class="caret"></b>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li ng-repeat="ct in getGoodsCategoriesWithTypes()">
+                                <div class="dropdown dropright">
+                                    <a class="dropdown-item"
+                                       href="#!/products?c={{ct['goodsCategory']['id']}}">
+                                        {{ct['goodsCategory']['naming']}}
+                                        <b class="dropdown-toggle" data-toggle="dropdown"></b>
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li ng-repeat="type in ct['goodsTypes']">
+                                            <a class="dropdown-item"
+                                               href="#!/products?c={{ct['goodsCategory']['id']}}&t={{type['id']}}">
+                                                {{type['naming']}}</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-5" ng-controller="FormsCtrl">
+                        <form name="searchForm" class="search-wrap" novalidate>
+                            <div class="input-group w-100">
+                                <input ng-model="searchQuery" type="text" class="form-control"
+                                       placeholder="Поиск товаров..." required>
+                                <div class="input-group-append">
+                                    <button type="submit" ng-click="searchGoods()" class="btn btn-primary">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-lg-2">
+                        <div class="widgets-wrap float-right">
+                            <a href="#!/cart" class="widget-header mr-3">
+                                <div class="icontext">
+                                    <div class="icon-wrap"><i class="icon-sm round border fa fa-shopping-cart"></i>
+                                    </div>
+                                    <div class="text-wrap">
+                                        <span class="small badge badge-danger">{{getCountPositionsInCart()}}</span>
+                                        <div>Корзина</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </header>
+
+    <section class="section-content bg padding-y">
+        <div class="container" ng-cloak>
+            <ng-view></ng-view>
+        </div>
+    </section>
+</div>
+<footer class="section-footer bg-secondary">
+    <div class="container">
+        <section class="section-subscribe bg-secondary padding-y-lg">
+            <div class="container" ng-controller="FormsCtrl">
+                <p class="pb-2 text-center white">Подписка на рассылки магазина о новых товарах, акциях и
+                    предложениях</p>
+                <div class="row justify-content-md-center">
+                    <div class="col-lg-6 col-sm-6">
+                        <form name="subscriberForm" class="row-sm form-noborder" novalidate>
+                            <div class="col-8">
+                                <input required ng-model="email" class="form-control" placeholder="Email"
+                                       type="email">
+                            </div>
+                            <div class="col-4">
+                                <button type="submit" ng-click="addSubscriber()" class="btn btn-block btn-warning"><i
+                                        class="fa fa-envelope"></i>
+                                    Подписаться
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="footer-top padding-top">
+            <div class="row">
+                <aside class="col-sm-4 col-md-4 white">
+                    <h5 class="title">Основная информация</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#">Как сделать заказ</a></li>
+                        <li><a href="#">Оплата и доставка</a></li>
+                        <li><a href="#">Способы доставки</a></li>
+                        <li><a href="#">Способы оплаты</a></li>
+                    </ul>
+                </aside>
+                <aside class="col-sm-4 col-md-4 white">
+                    <h5 class="title">О нас</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#">Кто мы</a></li>
+                        <li><a href="#">Адреса магазинов</a></li>
+                    </ul>
+                </aside>
+                <aside class="col-sm-4">
+                    <article class="white">
+                        <h5 class="title">Контакты</h5>
+                        <p>
+                            <strong>Телефон: </strong> +89992221133 <br>
+                        </p>
+                        <div class="btn-group white">
+                            <a class="btn btn-facebook" title="Facebook" target="_blank" href="#"><i
+                                    class="fab fa-facebook-f  fa-fw"></i></a>
+                            <a class="btn btn-instagram" title="Instagram" target="_blank" href="#"><i
+                                    class="fab fa-instagram  fa-fw"></i></a>
+                            <a class="btn btn-youtube" title="Youtube" target="_blank" href="#"><i
+                                    class="fab fa-youtube  fa-fw"></i></a>
+                            <a class="btn btn-twitter" title="Twitter" target="_blank" href="#"><i
+                                    class="fab fa-twitter  fa-fw"></i></a>
+                        </div>
+                    </article>
+                </aside>
+            </div>
+            <br>
+        </section>
+        <footer class="footer-bottom row border-top-white">
+            <div class="col-sm-12 text-md-center text-white-50">
+                Copyright &copy
+            </div>
+            <div class="col-sm-12 text-md-center text-white-50">
+                <a href="http://127.0.0.1:8080/" class="text-white-50">Kotomka Shop</a>
+            </div>
+        </footer>
+    </div>
+</footer>
+</body>
+</html>
